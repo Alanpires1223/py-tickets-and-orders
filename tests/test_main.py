@@ -9,7 +9,6 @@ from db.models import (
     
     
     Movie,
-    MovieSession,
     CinemaHall,
     Order,
     Ticket
