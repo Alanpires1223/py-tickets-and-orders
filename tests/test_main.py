@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from db.models import (
-    Actor,
+    
     Genre,
     Movie,
     MovieSession,
