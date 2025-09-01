@@ -13,7 +13,7 @@ from db.models import (
     Movie,
     MovieSession,
     Order,
-    Ticket,
+    Ticket
 )
 from services.movie import get_movies, create_movie
 from services.movie_session import get_taken_seats
@@ -134,9 +134,9 @@ def test_auth_user_models():
 
 def test_order_str(orders_data):
     order = Order.objects.get(id=1)
-    assert str(order) == str(order.created_at)
+    assert str(order) == f"<Order: {order.created_at}>"
     order = Order.objects.get(id=2)
-    assert str(order) == str(order.created_at)
+    assert str(order) == f"<Order: {order.created_at}>"
 
 
 def test_order_ordering(orders_data):
