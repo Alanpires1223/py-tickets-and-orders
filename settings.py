@@ -28,3 +28,6 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "db",
 ]
+
+# Adicione esta linha para usar seu modelo de usuário personalizado
+AUTH_USER_MODEL = "db.User"

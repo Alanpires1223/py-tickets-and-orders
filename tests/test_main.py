@@ -6,16 +6,17 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from db.models import (
-    
-    
+    User,
+    Genre,
+    Actor,
+    CinemaHall,
     Movie,
+    MovieSession,
     Order,
-    Ticket
+    Ticket,
 )
 from services.movie import get_movies, create_movie
-from services.movie_session import (
-    get_taken_seats,
-)
+from services.movie_session import get_taken_seats
 from services.user import create_user, get_user, update_user
 from services.order import create_order, get_orders
 
@@ -39,35 +40,35 @@ def actors_data():
 
 @pytest.fixture()
 def movies_data(genres_data, actors_data):
-    matrix = Movie.objects.create(title="Matrix", description="Matrix movie")
+    matrix = Movie.objects.create(title="Matrix", description="Matrix movie", duration=150)
     matrix.actors.add(1)
     matrix.actors.add(2)
     matrix.genres.add(1)
 
     matrix2 = Movie.objects.create(title="Matrix 2",
-                                   description="Matrix 2 movie")
+                                   description="Matrix 2 movie", duration=180)
     matrix2.genres.add(1)
     matrix2.actors.add(2)
 
     batman = Movie.objects.create(title="Batman",
-                                  description="Batman movie")
+                                  description="Batman movie", duration=120)
     batman.genres.add(2)
     batman.actors.add(3)
 
     titanic = Movie.objects.create(title="Titanic",
-                                   description="Titanic movie")
+                                   description="Titanic movie", duration=240)
     titanic.genres.add(1, 2)
 
     good_bad = Movie.objects.create(
         title="The Good, the Bad and the Ugly",
-        description="The Good, the Bad and the Ugly movie",
+        description="The Good, the Bad and the Ugly movie", duration=160
     )
     good_bad.genres.add(3)
 
-    Movie.objects.create(title="Harry Potter 1")
-    Movie.objects.create(title="Harry Potter 2")
-    Movie.objects.create(title="Harry Potter 3")
-    Movie.objects.create(title="Harry Kasparov: Documentary")
+    Movie.objects.create(title="Harry Potter 1", duration=150)
+    Movie.objects.create(title="Harry Potter 2", duration=160)
+    Movie.objects.create(title="Harry Potter 3", duration=170)
+    Movie.objects.create(title="Harry Kasparov: Documentary", duration=90)
 
 
 @pytest.fixture()
@@ -319,7 +320,7 @@ def incorrect_tickets():
 
 @pytest.fixture()
 def create_order_data():
-    movie = Movie.objects.create(title="Speed", description="Description")
+    movie = Movie.objects.create(title="Speed", description="Description", duration=90)
     cinema_hall = CinemaHall.objects.create(name="Blue",
                                             rows=14,
                                             seats_in_row=12)
