@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 
 from db.models import (
     
-    Genre,
+    
     Movie,
     MovieSession,
     CinemaHall,
