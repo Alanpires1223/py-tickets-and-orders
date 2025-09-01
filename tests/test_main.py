@@ -109,15 +109,13 @@ def users_data():
 
 @pytest.fixture()
 def orders_data(users_data):
-    for ind, order in enumerate([
-        Order.objects.create(id=1, user_id=1),
-        Order.objects.create(id=2, user_id=1),
-        Order.objects.create(id=3, user_id=2)
+    # A data é fornecida aqui para evitar o IntegrityError
+    for ind, order_data in enumerate([
+        {"id": 1, "user_id": 1, "created_at": datetime.datetime(2020, 11, 1, 0, 0)},
+        {"id": 2, "user_id": 1, "created_at": datetime.datetime(2020, 11, 2, 0, 0)},
+        {"id": 3, "user_id": 2, "created_at": datetime.datetime(2020, 11, 3, 0, 0)}
     ]):
-        order.created_at = datetime.datetime(
-            2020, 11, 1 + ind, 0, 0
-        )
-        order.save()
+        Order.objects.create(**order_data)
 
 
 @pytest.fixture()
@@ -392,8 +390,8 @@ def test_ticket_clean_seat_out_of_range(movie_sessions_data, orders_data):
 
 def test_create_movie_transaction_atomic(genres_data, actors_data):
     with pytest.raises(ValueError):
-        create_movie(movie_title="New movie",
-                     movie_description="Movie description",
+        create_movie(title="New movie",
+                     description="Movie description",
                      genres_ids=["zero", 1, 2],
                      actors_ids=[1, 2, 3])
 
