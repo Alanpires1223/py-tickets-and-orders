@@ -10,6 +10,18 @@ def create_order(
     username: str,
     date: Optional[str] = None
 ) -> Order:
+    """
+    Cria um pedido (Order) e os tickets associados.
+
+    Args:
+        tickets (List[Dict]): Lista de tickets com 'movie_session', 'row',
+            'seat'.
+        username (str): Nome de usuário do comprador.
+        date (Optional[str]): Data do pedido em formato "%Y-%m-%d %H:%M".
+
+    Returns:
+        Order: Pedido criado com sucesso.
+    """
     user = User.objects.get(username=username)
 
     order_data = {}
@@ -45,6 +57,15 @@ def create_order(
 
 
 def get_orders(username: Optional[str] = None) -> models.QuerySet[Order]:
+    """
+    Retorna todos os pedidos ou filtrados por usuário.
+
+    Args:
+        username (Optional[str]): Nome do usuário para filtrar pedidos.
+
+    Returns:
+        QuerySet: QuerySet de Orders.
+    """
     qs = Order.objects.all()
     if username:
         qs = qs.filter(
