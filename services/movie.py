@@ -1,6 +1,6 @@
 from db.models import Movie
 from django.db import transaction, models
-from typing import List, Dict, Optional
+from typing import List, Optional
 
 
 def get_movies(
@@ -16,6 +16,7 @@ def get_movies(
     if actors_ids:
         qs = qs.filter(actors__id__in=actors_ids)
     return qs.distinct()
+
 
 @transaction.atomic
 def create_movie(title: str, description: str, duration: int) -> Movie:

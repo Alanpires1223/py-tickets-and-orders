@@ -5,12 +5,14 @@ from typing import List, Dict, Optional
 
 
 @transaction.atomic
-def create_order(tickets: List[Dict], username: str, date: Optional[str] = None) -> Order:
+def create_order(
+    tickets: List[Dict], username: str, date: Optional[str] = None
+) -> Order:
     user = User.objects.get(username=username)
     order_data = {}
     if date:
-        order_data["created_at"] = datetime.strptime(
-            date, "%Y-%m-%d %H:%M"
+        order_data["created_at"] = (
+            datetime.strptime(date, "%Y-%m-%d %H:%M")
         )
     order = Order.objects.create(user=user, **order_data)
 
