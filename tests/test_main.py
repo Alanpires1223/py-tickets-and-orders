@@ -109,15 +109,21 @@ def users_data():
 
 @pytest.fixture()
 def orders_data(users_data):
-    for ind, order in enumerate([
-        Order.objects.create(id=1, user_id=1),
-        Order.objects.create(id=2, user_id=1),
-        Order.objects.create(id=3, user_id=2)
-    ]):
-        order.created_at = datetime.datetime(
-            2020, 11, 1 + ind, 0, 0
-        )
-        order.save()
+    order1 = Order.objects.create(
+        id=1, 
+        user_id=1, 
+        created_at=datetime.datetime(2020, 11, 1, 0, 0)
+    )
+    order2 = Order.objects.create(
+        id=2, 
+        user_id=1, 
+        created_at=datetime.datetime(2020, 11, 2, 0, 0)
+    )
+    order3 = Order.objects.create(
+        id=3, 
+        user_id=2, 
+        created_at=datetime.datetime(2020, 11, 3, 0, 0)
+    )
 
 
 @pytest.fixture()

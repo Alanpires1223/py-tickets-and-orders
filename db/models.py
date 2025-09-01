@@ -124,15 +124,13 @@ class Ticket(models.Model):
         errors = {}
         if self.row < 1 or self.row > self.movie_session.cinema_hall.rows:
             errors["row"] = [
-                f"row number must be in available range: (1, rows): "
+                "row number must be in available range: (1, rows): "
                 f"(1, {self.movie_session.cinema_hall.rows})"
             ]
-        if (
-            self.seat < 1
-            or self.seat > self.movie_session.cinema_hall.seats_in_row
-        ):
+        if (self.seat < 1
+                or self.seat > self.movie_session.cinema_hall.seats_in_row):
             errors["seat"] = [
-                f"seat number must be in available range: (1, seats_in_row): "
+                "seat number must be in available range: (1, seats_in_row): "
                 f"(1, {self.movie_session.cinema_hall.seats_in_row})"
             ]
 
@@ -140,7 +138,7 @@ class Ticket(models.Model):
             raise ValidationError(errors)
 
     def save(self, *args, **kwargs) -> None:
-        self.full_clean()  # chama clean() antes de salvar
+        self.full_clean()
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:

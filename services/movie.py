@@ -1,4 +1,4 @@
-from db.models import Movie
+from db.models import Movie, Genre, Actor
 from django.db import transaction, models
 from typing import List, Optional
 
@@ -19,10 +19,25 @@ def get_movies(
 
 
 @transaction.atomic
-def create_movie(title: str, description: str, duration: int) -> Movie:
+def create_movie(
+    title: str,
+    description: str,
+    duration: int,
+    genres_ids: Optional[List[int]] = None,
+    actors_ids: Optional[List[int]] = None
+) -> Movie:
     movie = Movie.objects.create(
         title=title,
         description=description,
         duration=duration
     )
+
+    if genres_ids:
+        genres = Genre.objects.filter(id__in=genres_ids)
+        movie.genres.set(genres)
+
+    if actors_ids:
+        actors = Actor.objects.filter(id__in=actors_ids)
+        movie.actors.set(actors)
+
     return movie

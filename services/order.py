@@ -1,7 +1,8 @@
 from db.models import Order, Ticket, User, MovieSession
 from django.db import transaction, models
-from datetime import datetime
+from django.utils import timezone
 from typing import List, Dict, Optional
+from datetime import datetime
 
 
 @transaction.atomic
@@ -9,12 +10,13 @@ def create_order(
     tickets: List[Dict], username: str, date: Optional[str] = None
 ) -> Order:
     user = User.objects.get(username=username)
-    order_data = {}
+
     if date:
-        order_data["created_at"] = (
-            datetime.strptime(date, "%Y-%m-%d %H:%M")
-        )
-    order = Order.objects.create(user=user, **order_data)
+        created_at = datetime.strptime(date, "%Y-%m-%d %H:%M")
+    else:
+        created_at = timezone.now()
+
+    order = Order.objects.create(user=user, created_at=created_at)
 
     for ticket_data in tickets:
         movie_session = MovieSession.objects.get(
