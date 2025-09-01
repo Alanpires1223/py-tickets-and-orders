@@ -2,6 +2,9 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from typing import Optional
 
+# Pega o modelo de usuário apenas uma vez
+User = get_user_model()
+
 
 def create_user(
     username: str,
@@ -10,7 +13,7 @@ def create_user(
     last_name: Optional[str] = None,
     email: Optional[str] = None,
 ) -> None:
-    user = get_user_model()
+    """Cria um novo usuário."""
     User.objects.create_user(
         username=username,
         password=password,
@@ -21,7 +24,7 @@ def create_user(
 
 
 def get_user(user_id: int) -> models.Model:
-    user = get_user_model()
+    """Retorna um usuário pelo ID."""
     return User.objects.get(id=user_id)
 
 
@@ -33,7 +36,9 @@ def update_user(
     first_name: Optional[str] = None,
     last_name: Optional[str] = None,
 ) -> None:
+    """Atualiza os dados de um usuário."""
     user = get_user(user_id)
+
     if username:
         user.username = username
     if email:
@@ -44,4 +49,5 @@ def update_user(
         user.last_name = last_name
     if password:
         user.set_password(password)
+
     user.save()

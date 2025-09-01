@@ -5,6 +5,9 @@ from datetime import datetime
 
 from db.models import Order, Ticket, MovieSession
 
+# Pega o modelo de usuário apenas uma vez
+User = get_user_model()
+
 
 @transaction.atomic
 def create_order(
@@ -12,8 +15,7 @@ def create_order(
     username: str,
     date: Optional[str] = None
 ) -> Order:
-    user = get_user_model()
-    user = User.objects.get(username=username)
+    user = User.objects.get(username=username)  # Usa o modelo correto
 
     if date:
         # datetime naive para SQLite
@@ -27,13 +29,12 @@ def create_order(
         movie_session = MovieSession.objects.get(
             id=ticket_data["movie_session"]
         )
-        ticket = Ticket(
+        Ticket.objects.create(
             movie_session=movie_session,
             order=order,
             row=ticket_data["row"],
             seat=ticket_data["seat"],
         )
-        ticket.save()
 
     return order
 
