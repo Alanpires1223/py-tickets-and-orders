@@ -15,7 +15,7 @@ def get_movies(
         qs = qs.filter(genres__id__in=genres_ids)
     if actors_ids:
         qs = qs.filter(actors__id__in=actors_ids)
-    return qs.distinct()
+    return qs.distinct().order_by("id")
 
 
 @transaction.atomic

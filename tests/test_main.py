@@ -109,13 +109,15 @@ def users_data():
 
 @pytest.fixture()
 def orders_data(users_data):
-    # A data é fornecida aqui para evitar o IntegrityError
-    for ind, order_data in enumerate([
-        {"id": 1, "user_id": 1, "created_at": datetime.datetime(2020, 11, 1, 0, 0)},
-        {"id": 2, "user_id": 1, "created_at": datetime.datetime(2020, 11, 2, 0, 0)},
-        {"id": 3, "user_id": 2, "created_at": datetime.datetime(2020, 11, 3, 0, 0)}
+    for ind, order in enumerate([
+        Order.objects.create(id=1, user_id=1),
+        Order.objects.create(id=2, user_id=1),
+        Order.objects.create(id=3, user_id=2)
     ]):
-        Order.objects.create(**order_data)
+        order.created_at = datetime.datetime(
+            2020, 11, 1 + ind, 0, 0
+        )
+        order.save()
 
 
 @pytest.fixture()
