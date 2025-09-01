@@ -5,70 +5,30 @@ from typing import List, Dict, Optional
 
 
 @transaction.atomic
-def create_order(
-    tickets: List[Dict],
-    username: str,
-    date: Optional[str] = None
-) -> Order:
-    """
-    Cria um pedido (Order) e os tickets associados.
-
-    Args:
-        tickets (List[Dict]): Lista de tickets com 'movie_session', 'row',
-            'seat'.
-        username (str): Nome de usuário do comprador.
-        date (Optional[str]): Data do pedido em formato "%Y-%m-%d %H:%M".
-
-    Returns:
-        Order: Pedido criado com sucesso.
-    """
+def create_order(tickets: List[Dict], username: str, date: Optional[str] = None) -> Order:
     user = User.objects.get(username=username)
-
     order_data = {}
     if date:
-        date_format = "%Y-%m-%d %H:%M"
-        parsed_date = datetime.strptime(
-            date,
-            date_format
+        order_data["created_at"] = datetime.strptime(
+            date, "%Y-%m-%d %H:%M"
         )
-        order_data["created_at"] = parsed_date
+    order = Order.objects.create(user=user, **order_data)
 
-    order = Order.objects.create(
-        user=user,
-        **order_data
-    )
-
-    tickets_to_create = []
     for ticket_data in tickets:
         movie_session = MovieSession.objects.get(
             id=ticket_data["movie_session"]
         )
-        tickets_to_create.append(
-            Ticket(
-                movie_session=movie_session,
-                order=order,
-                row=ticket_data["row"],
-                seat=ticket_data["seat"]
-            )
+        Ticket.objects.create(
+            movie_session=movie_session,
+            order=order,
+            row=ticket_data["row"],
+            seat=ticket_data["seat"]
         )
-
-    Ticket.objects.bulk_create(tickets_to_create)
     return order
 
 
-def get_orders(username: Optional[str] = None) -> models.QuerySet[Order]:
-    """
-    Retorna todos os pedidos ou filtrados por usuário.
-
-    Args:
-        username (Optional[str]): Nome do usuário para filtrar pedidos.
-
-    Returns:
-        QuerySet: QuerySet de Orders.
-    """
+def get_orders(username: Optional[str] = None) -> models.QuerySet:
     qs = Order.objects.all()
     if username:
-        qs = qs.filter(
-            user__username=username
-        )
+        qs = qs.filter(user__username=username)
     return qs
