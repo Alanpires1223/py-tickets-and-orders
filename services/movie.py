@@ -7,7 +7,7 @@ def get_movies(
     title: Optional[str] = None,
     genres_ids: Optional[List[int]] = None,
     actors_ids: Optional[List[int]] = None
-) -> models.QuerySet:
+) -> models.QuerySet[Movie]:
     qs = Movie.objects.all()
     if title:
         qs = qs.filter(title__icontains=title)

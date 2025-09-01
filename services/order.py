@@ -1,20 +1,25 @@
-from db.models import Order, Ticket, User, MovieSession
 from django.db import transaction, models
-from django.utils import timezone
+from django.contrib.auth import get_user_model
 from typing import List, Dict, Optional
 from datetime import datetime
+
+from db.models import Order, Ticket, MovieSession
 
 
 @transaction.atomic
 def create_order(
-    tickets: List[Dict], username: str, date: Optional[str] = None
+    tickets: List[Dict],
+    username: str,
+    date: Optional[str] = None
 ) -> Order:
+    User = get_user_model()
     user = User.objects.get(username=username)
 
     if date:
+        # datetime naive para SQLite
         created_at = datetime.strptime(date, "%Y-%m-%d %H:%M")
     else:
-        created_at = timezone.now()
+        created_at = datetime.now()
 
     order = Order.objects.create(user=user, created_at=created_at)
 
@@ -22,17 +27,19 @@ def create_order(
         movie_session = MovieSession.objects.get(
             id=ticket_data["movie_session"]
         )
-        Ticket.objects.create(
+        ticket = Ticket(
             movie_session=movie_session,
             order=order,
             row=ticket_data["row"],
-            seat=ticket_data["seat"]
+            seat=ticket_data["seat"],
         )
+        ticket.save()
+
     return order
 
 
-def get_orders(username: Optional[str] = None) -> models.QuerySet:
-    qs = Order.objects.all()
+def get_orders(username: Optional[str] = None) -> models.QuerySet[Order]:
+    qs = Order.objects.all().order_by("-created_at")
     if username:
         qs = qs.filter(user__username=username)
     return qs
