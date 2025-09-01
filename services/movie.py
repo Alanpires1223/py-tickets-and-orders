@@ -3,6 +3,16 @@ from django.db import transaction
 from typing import List
 
 
+def get_movies() -> List[Movie]:
+    """
+    Retorna todos os filmes cadastrados.
+
+    Returns:
+        List[Movie]: Lista de filmes.
+    """
+    return list(Movie.objects.all())
+
+
 @transaction.atomic
 def create_movie(
     movie_title: str,
