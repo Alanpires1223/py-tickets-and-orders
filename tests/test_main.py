@@ -400,6 +400,7 @@ def test_create_movie_transaction_atomic(genres_data, actors_data):
     with pytest.raises(ValueError):
         create_movie(title="New movie",
                      description="Movie description",
+                     duration=120,
                      genres_ids=["zero", 1, 2],
                      actors_ids=[1, 2, 3])
 
