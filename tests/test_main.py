@@ -148,9 +148,12 @@ def test_order_ordering(orders_data):
 
 
 def test_ticket_str(tickets_data):
-    assert str(
-        Ticket.objects.first()
-    ) == "Matrix 2019-08-19 20:30:00 (row: 7, seat: 10)"
+    ticket = Ticket.objects.first()
+    assert str(ticket) == (
+        f"<Ticket: {ticket.movie_session.movie.title} "
+        f"{ticket.movie_session.show_time} (row: {ticket.row}, "
+        f"seat: {ticket.seat})>"
+    )
 
 
 def test_ticket_unique_constraint(tickets_data):
