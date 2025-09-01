@@ -12,7 +12,7 @@ def create_order(
     username: str,
     date: Optional[str] = None
 ) -> Order:
-    User = get_user_model()
+    user = get_user_model()
     user = User.objects.get(username=username)
 
     if date:
